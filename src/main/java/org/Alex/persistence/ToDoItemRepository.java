@@ -30,7 +30,7 @@ public class ToDoItemRepository {
         String query = "SELECT id,description,deadline,status FROM to_do_item";
 
         try (Connection connection = DatabaseConfiguration.getConnection();
-             Statement statement = connection.createStatement();
+             Statement statement = connection.createStatement()
         ) {
             ResultSet resultSet = statement.executeQuery(query);
 
