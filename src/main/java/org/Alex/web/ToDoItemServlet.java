@@ -6,6 +6,7 @@ import org.Alex.config.ObjectMapperConfiguration;
 import org.Alex.domain.ToDoItem;
 import org.Alex.service.ToDoItemService;
 import org.Alex.transfer.SaveToDoItemRequest;
+import org.Alex.transfer.UpdateToDoItemRequest;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -56,6 +57,18 @@ public class ToDoItemServlet extends HttpServlet {
 
         try {
             toDoItemService.deleteToDoItem(Long.parseLong(id));
+        } catch (SQLException | ClassNotFoundException e) {
+            resp.sendError(500,"Internal server error: " + e.getMessage());
+        }
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String id = req.getParameter("id");
+        UpdateToDoItemRequest request = ObjectMapperConfiguration.getObjectMapper().readValue(req.getReader(), UpdateToDoItemRequest.class);
+
+        try {
+            toDoItemService.updateToDoItem(Long.parseLong(id), request);
         } catch (SQLException | ClassNotFoundException e) {
             resp.sendError(500,"Internal server error: " + e.getMessage());
         }

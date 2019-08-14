@@ -3,6 +3,7 @@ package org.Alex.service;
 import org.Alex.domain.ToDoItem;
 import org.Alex.persistence.ToDoItemRepository;
 import org.Alex.transfer.SaveToDoItemRequest;
+import org.Alex.transfer.UpdateToDoItemRequest;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -27,5 +28,10 @@ public class ToDoItemService {
     public void deleteToDoItem(long id) throws SQLException, IOException, ClassNotFoundException {
         System.out.println("Deleting toDoItem:" + id);
         toDoItemRepository.deleteToDoItem(id);
+    }
+
+    public void updateToDoItem(long id, UpdateToDoItemRequest request) throws SQLException, IOException, ClassNotFoundException {
+        System.out.println("Updating toDoItem " + id + ":" + request);
+        toDoItemRepository.updateToDoItem(id, request.isStatus());
     }
 }
