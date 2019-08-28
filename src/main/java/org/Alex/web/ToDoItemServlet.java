@@ -24,18 +24,21 @@ public class ToDoItemServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        setAccesControlHeaders(resp);
 
         SaveToDoItemRequest request = ObjectMapperConfiguration.getObjectMapper().readValue(req.getReader(), SaveToDoItemRequest.class);
         try {
             toDoItemService.createToDoItem(request);
         } catch (SQLException | ClassNotFoundException e) {
-            resp.sendError(500,"Internal server error: " + e.getMessage());
+            resp.sendError(500, "Internal server error: " + e.getMessage());
         }
 
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        setAccesControlHeaders(resp);
+
         try {
             List<ToDoItem> toDoItems = toDoItemService.getToDoItems();
 
@@ -47,30 +50,48 @@ public class ToDoItemServlet extends HttpServlet {
 
 
         } catch (SQLException | ClassNotFoundException e) {
-            resp.sendError(500,"Internal server error: " + e.getMessage());
+            resp.sendError(500, "Internal server error: " + e.getMessage());
         }
     }
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        setAccesControlHeaders(resp);
+
         String id = req.getParameter("id");
 
         try {
             toDoItemService.deleteToDoItem(Long.parseLong(id));
         } catch (SQLException | ClassNotFoundException e) {
-            resp.sendError(500,"Internal server error: " + e.getMessage());
+            resp.sendError(500, "Internal server error: " + e.getMessage());
         }
     }
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        setAccesControlHeaders(resp);
+
         String id = req.getParameter("id");
         UpdateToDoItemRequest request = ObjectMapperConfiguration.getObjectMapper().readValue(req.getReader(), UpdateToDoItemRequest.class);
 
         try {
             toDoItemService.updateToDoItem(Long.parseLong(id), request);
         } catch (SQLException | ClassNotFoundException e) {
-            resp.sendError(500,"Internal server error: " + e.getMessage());
+            resp.sendError(500, "Internal server error: " + e.getMessage());
         }
+    }
+
+    //pre-flight requests
+    @Override
+    protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        setAccesControlHeaders(resp);
+
+    }
+
+    //CORS(Cross-Origin-Resource-Sharing
+    private void setAccesControlHeaders(HttpServletResponse resp) {
+        resp.setHeader("Access-Control-Allow-Origin", "*");
+        resp.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE");
+        resp.setHeader("Access-Control-Allow-Headers", "content-type");
     }
 }
